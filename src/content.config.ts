@@ -181,6 +181,11 @@ const events = defineCollection({
       responses: z.number().optional().default(0),
       highlights: z.array(z.string()).default([]),
     }).optional(),
+    poster: z.object({
+      src: z.string().regex(/^\/[^\s]*$/, "Use a site-relative path starting with /"),
+      alt: z.string(),
+      label: z.string().optional().default("View poster"),
+    }).optional(),
     photoGallery: z.object({
       label: z.string().optional().default("Event photos"),
       href: z.string().regex(/^\/[^\s]*$/, "Use a site-relative path starting with /"),

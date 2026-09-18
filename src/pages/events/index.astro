@@ -336,6 +336,73 @@ const chatDigests = [
       width: 18px;
     }
 
+    .events-poster-link {
+      background: rgba(215, 228, 248, 0.09);
+      color: var(--accent);
+    }
+
+    .events-poster-dialog {
+      background: rgba(3, 5, 12, 0.96);
+      border: 1px solid rgba(215, 228, 248, 0.28);
+      color: var(--text);
+      margin: auto;
+      max-height: calc(100% - 40px);
+      max-width: min(920px, calc(100% - 40px));
+      padding: 16px;
+      width: max-content;
+    }
+
+    .events-poster-dialog[open] {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .events-poster-dialog::backdrop {
+      background: rgba(3, 5, 12, 0.92);
+    }
+
+    .events-poster-dialog-header {
+      align-items: center;
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+    }
+
+    .events-poster-dialog-title {
+      color: var(--accent);
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .events-poster-dialog-close {
+      background: rgba(215, 228, 248, 0.08);
+      border: 1px solid rgba(215, 228, 248, 0.28);
+      color: var(--accent);
+      cursor: pointer;
+      flex: 0 0 auto;
+      font: inherit;
+      font-size: 1rem;
+      min-height: 44px;
+      padding: 8px 12px;
+    }
+
+    .events-poster-dialog-close:hover,
+    .events-poster-dialog-close:focus-visible {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .events-poster-dialog-image {
+      display: block;
+      height: auto;
+      justify-self: center;
+      max-height: calc(100vh - 120px);
+      max-width: 100%;
+      object-fit: contain;
+      overflow: hidden;
+    }
+
     .events-panel-content.is-hidden {
       display: none;
     }
@@ -702,6 +769,18 @@ const chatDigests = [
                   Register <span class="inline-arrow" aria-hidden="true">▶</span>
                 </a>
               )}
+              {event.data.poster && (
+                <a
+                  class="button button-secondary events-poster-link"
+                  href={event.data.poster.src}
+                  data-poster-open
+                  data-poster-src={event.data.poster.src}
+                  data-poster-alt={event.data.poster.alt}
+                  data-poster-title={event.data.title}
+                >
+                  {event.data.poster.label} <span class="inline-arrow" aria-hidden="true">▶</span>
+                </a>
+              )}
             </div>
             {event.data.tags.length > 0 && (
               <ul class="tag-list" style="margin-top: 8px;">
@@ -757,6 +836,20 @@ const chatDigests = [
                       )}
                     </div>
                   </div>
+                  {event.data.poster && (
+                    <div class="survey-actions">
+                      <a
+                        class="button button-secondary events-poster-link"
+                        href={event.data.poster.src}
+                        data-poster-open
+                        data-poster-src={event.data.poster.src}
+                        data-poster-alt={event.data.poster.alt}
+                        data-poster-title={event.data.title}
+                      >
+                        {event.data.poster.label} <span class="inline-arrow" aria-hidden="true">▶</span>
+                      </a>
+                    </div>
+                  )}
                   {event.data.tags.length > 0 && (
                     <ul class="tag-list" style="margin-top: 8px;">
                       {event.data.tags.map((tag) => (
@@ -1070,6 +1163,14 @@ const chatDigests = [
     )}
   </details>
 
+  <dialog class="events-poster-dialog" aria-labelledby="events-poster-dialog-title" data-poster-dialog>
+    <div class="events-poster-dialog-header">
+      <h2 class="events-poster-dialog-title" id="events-poster-dialog-title" data-poster-dialog-title>Event poster</h2>
+      <button class="events-poster-dialog-close" type="button" data-poster-close>Close</button>
+    </div>
+    <img class="events-poster-dialog-image" src="" alt="" data-poster-image />
+  </dialog>
+
   <script>
     const getLocalDateKey = (date: Date) => {
       const year = date.getFullYear();
@@ -1147,5 +1248,30 @@ const chatDigests = [
 
     window.addEventListener("hashchange", revealHashTarget);
     revealHashTarget();
+
+    const posterDialog = document.querySelector("[data-poster-dialog]");
+    const posterImage = document.querySelector("[data-poster-image]");
+    const posterTitle = document.querySelector("[data-poster-dialog-title]");
+    const posterClose = document.querySelector("[data-poster-close]");
+
+    document.querySelectorAll("[data-poster-open]").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        if (!(posterDialog instanceof HTMLDialogElement) || !(posterImage instanceof HTMLImageElement)) return;
+        if (!(link instanceof HTMLElement)) return;
+        event.preventDefault();
+        posterImage.src = link.dataset.posterSrc || "";
+        posterImage.alt = link.dataset.posterAlt || "";
+        if (posterTitle instanceof HTMLElement) {
+          posterTitle.textContent = link.dataset.posterTitle || "Event poster";
+        }
+        posterDialog.showModal();
+      });
+    });
+
+    posterClose?.addEventListener("click", () => {
+      if (posterDialog instanceof HTMLDialogElement) {
+        posterDialog.close();
+      }
+    });
   </script>
 </BaseLayout>

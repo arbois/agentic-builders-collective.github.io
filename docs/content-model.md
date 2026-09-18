@@ -173,6 +173,15 @@ An evening of demos, discussions, and community building.
 
 Use `sharedBy` when a listed member or organiser contributed the event listing or surfaced an external opportunity for the community.
 
+Events can include a site-local poster that opens in a modal from the event listing. Store the compressed image under `public/images/events/<eventId>/`.
+
+```yaml
+poster:
+  src: /images/events/2026-05-14-example-event/poster.jpg
+  alt: Poster for Example Event on 14 May 2026
+  label: View poster
+```
+
 Events can link a site-local photo gallery after the event. Store compressed images under `public/images/events/<eventId>/`, never original high-resolution phone files.
 
 ```yaml
