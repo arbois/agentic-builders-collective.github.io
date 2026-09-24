@@ -7,7 +7,7 @@ venue: "Online (Google Meet, link on registration)"
 registrationUrl: "https://luma.com/fxbfszds"
 hosts:
   - name: "Tangent"
-  - name: "Vaughn Tan"
+  - personId: "vaughn-tan"
 sharedBy:
   - personId: "vaughn-tan"
 tags:
