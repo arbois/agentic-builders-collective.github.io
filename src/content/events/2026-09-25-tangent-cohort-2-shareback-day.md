@@ -9,7 +9,7 @@ hosts:
   - name: "Tangent"
   - name: "Vaughn Tan"
 sharedBy:
-  - name: "Vaughn Tan"
+  - personId: "vaughn-tan"
 tags:
   - "startups"
   - "founders"
